@@ -15,7 +15,7 @@ namespace ClipboardLinkSaver
         [STAThread]
         static void Main(string[] args)
         {
-            var host = Host.CreateDefaultBuilder(args) //new HostBuilder()
+            var host = Host.CreateDefaultBuilder(args)
                 .ConfigureCoreConfig()
                 .ConfigureCoreLogging()
                 .Build();
@@ -46,6 +46,12 @@ namespace ClipboardLinkSaver
                             break;
                         case ConsoleKey.R:
                             fileHandler.ReloadFile();
+                            break;
+                        case ConsoleKey.C:
+                            fileHandler.ClearFile();
+                            break;
+                        case ConsoleKey.O:
+                            fileHandler.OpenFile();
                             break;
                         default:
                             PrintHelp();
@@ -95,7 +101,7 @@ namespace ClipboardLinkSaver
 
         private static void PrintHelp()
         {
-            Console.WriteLine("Press S to Save, R to Reload, Esc to exit.");
+            Console.WriteLine("Press S to Save, R to Reload, C to Clear, O to Open the file, Esc to exit.");
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Targets;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Joins;
@@ -116,6 +117,25 @@ namespace ClipboardLinkSaver
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Trying to load {_file}");
+            }
+        }
+
+        internal void ClearFile()
+        {
+            _logger.LogInformation("Clearing list");
+            _items.Clear();
+        }
+
+        internal void OpenFile()
+        {
+            try
+            {
+                _logger.LogInformation($"Opening {_file}");
+                new Process { StartInfo = new ProcessStartInfo(_file) { UseShellExecute = true } }.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading {_file}", _file);
             }
         }
 
