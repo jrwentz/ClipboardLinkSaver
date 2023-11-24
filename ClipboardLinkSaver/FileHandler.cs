@@ -162,6 +162,7 @@ namespace ClipboardLinkSaver
                     if (isNew)
                     {
                         _logger.LogInformation($"Added {line}");
+                        _logger.LogTrace(line);
                     }
                     else
                     {

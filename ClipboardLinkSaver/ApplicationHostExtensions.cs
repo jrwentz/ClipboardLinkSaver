@@ -3,8 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Attributes;
+using NLog.Conditions;
 using NLog.Extensions.Logging;
+using NLog.Filters;
 using NLog.Targets;
+using NLog.Targets.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -48,6 +51,25 @@ namespace ClipboardLinkSaver
 
             var consoleMinLevel = LogLevel.Information < logLevel ? NLog.LogLevel.FromOrdinal((int)logLevel) : NLog.LogLevel.Info;
 
+            //File target for Captured Links
+            var filterTarget = new FilteringTargetWrapper()
+            {
+                Name = "links_filter",
+                Filter = new ConditionBasedFilter()
+                {
+                    Action = FilterResult.Ignore,
+                    Condition = ConditionParser.ParseExpression("not starts-with(message, 'http')")
+                },
+                //Condition = ConditionParser.ParseExpression("starts-with(message, 'http')"),
+                WrappedTarget = new FileTarget("logfile_links")
+                {
+                    FileName = $"{Application.StartupPath}/${{processname}}_links_${{shortdate}}.log",
+                    Layout = @"${message}"
+                }
+            };
+            nConfig.AddTarget(filterTarget);
+            nConfig.AddRuleForOneLevel(NLog.LogLevel.Trace, filterTarget);
+
             //Console Target
             var consoleTarget = new ColoredConsoleTarget("logconsole")
             {
@@ -80,6 +102,8 @@ namespace ClipboardLinkSaver
             };
             nConfig.AddTarget(fileTarget);
             nConfig.AddRuleForAllLevels(fileTarget);
+
+
 
             /*
             //Add a rule for web processing if that's enabled
