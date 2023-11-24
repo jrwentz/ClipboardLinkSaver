@@ -61,17 +61,21 @@ namespace ClipboardLinkSaver
                 () =>
                 {
                     _stopMe = true;
+                    fileHandler.SaveFile();
+                    _logger.LogInformation("Exiting!");
+                    Application.Exit();
                 }
             );
 
 
-            while (!_stopMe)
-            {
-                Application.DoEvents();
-            }
+            //while (!_stopMe)
+            //{
+            //    Application.DoEvents();
+            //}
+            Application.Run();
 
-            fileHandler.SaveFile();
-            _logger.LogInformation("Exiting!");
+            //fileHandler.SaveFile();
+            //_logger.LogInformation("Exiting!");
         }
 
         private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)

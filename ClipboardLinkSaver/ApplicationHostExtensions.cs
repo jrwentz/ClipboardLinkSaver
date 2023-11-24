@@ -51,7 +51,7 @@ namespace ClipboardLinkSaver
             //Console Target
             var consoleTarget = new ColoredConsoleTarget("logconsole")
             {
-                Layout = @"${onexception:inner=${callsite:includeNamespace=false:fileName=true:includeSourcePath:false} }${message} ${onexception:inner=${newline}    ${exception}}"
+                Layout = "${onexception:inner=${callsite:includeNamespace=false:fileName=true:includeSourcePath:false} }${message} ${onexception:inner=${newline}    ${exception}}"
             };
             nConfig.AddTarget(consoleTarget);
             nConfig.AddRule(consoleMinLevel, NLog.LogLevel.Fatal, consoleTarget);
@@ -72,17 +72,16 @@ namespace ClipboardLinkSaver
             //Default Null Rule for Microsoft.*
             nConfig.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Info, new NullTarget(), "Microsoft.*", true);
 
-            /*
             //File target for Debug
             var fileTarget = new FileTarget("logfile")
             {
-                FileName = "H:/source/repos/VideoIntelligence/logs/${processname}_debug_${shortdate}.log",
-                Layout = @"${longdate}|${level:uppercase=true}|${callsite:fileName=true}|${message}|${exception:format=tostring}|${logger}|${all-event-properties}"
+                FileName = $"{Application.StartupPath}/${{processname}}_debug_${{shortdate}}.log",
+                Layout = @"${onexception:inner=${callsite:includeNamespace=false:fileName=true:includeSourcePath:false} }${message} ${onexception:inner=${newline}    ${exception}}"
             };
             nConfig.AddTarget(fileTarget);
             nConfig.AddRuleForAllLevels(fileTarget);
 
-
+            /*
             //Add a rule for web processing if that's enabled
             if (addWeb)
             {
